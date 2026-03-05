@@ -27,26 +27,27 @@ const VehicleDetail = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Page Header */}
-      <div className="bg-[#0D1B2A] pt-28 pb-10">
-        <div className="container-custom">
+      <div className="bg-gradient-navy relative overflow-hidden pt-32 pb-10">
+        <div className="absolute -top-20 right-1/4 w-80 h-80 rounded-full bg-[#C9A84C]/6 blur-[70px] pointer-events-none" />
+        <div className="container-custom relative z-10">
           <Link
             to="/fleet"
-            className="inline-flex items-center gap-2 text-gray-400 hover:text-[#C9A84C] transition-colors text-sm mb-5"
+            className="inline-flex items-center gap-2 text-gray-400 hover:text-[#C9A84C] transition-colors text-sm mb-6"
           >
             <ArrowLeft size={16} /> Back to Fleet
           </Link>
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
-              <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-[#C9A84C] text-[#0D1B2A] mb-3">
+              <span className="inline-block px-3 py-1.5 rounded-full text-xs font-bold bg-[#C9A84C] text-[#0A1628] mb-3">
                 {vehicle.type}
               </span>
-              <h1 className="text-3xl md:text-4xl font-bold text-white">{vehicle.name}</h1>
-              <div className="flex items-center gap-3 mt-2">
+              <h1 className="text-3xl md:text-4xl font-bold text-white mb-3">{vehicle.name}</h1>
+              <div className="flex items-center gap-3">
                 <div className="flex items-center gap-1">
                   {[...Array(5)].map((_, i) => (
                     <Star
                       key={i}
-                      size={16}
+                      size={15}
                       className={i < Math.floor(vehicle.rating) ? 'text-[#C9A84C] fill-[#C9A84C]' : 'text-gray-600'}
                     />
                   ))}
@@ -54,9 +55,9 @@ const VehicleDetail = () => {
                 <span className="text-gray-400 text-sm">{vehicle.rating} ({vehicle.reviews} reviews)</span>
               </div>
             </div>
-            <div className="flex items-center gap-3">
-              <button className="flex items-center gap-2 px-4 py-2 border border-white/20 rounded-lg text-white text-sm hover:border-white/40 transition-colors">
-                <Share2 size={16} /> Share
+            <div className="flex items-center gap-4">
+              <button className="flex items-center gap-2 px-4 py-2.5 border border-white/15 rounded-xl text-white text-sm hover:border-white/30 hover:bg-white/5 transition-all">
+                <Share2 size={15} /> Share
               </button>
               <div className="text-right">
                 <p className="text-gray-400 text-xs">Starting from</p>
@@ -115,7 +116,12 @@ const VehicleDetail = () => {
         {/* Related Vehicles */}
         {related.length > 0 && (
           <div className="mt-16">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Similar Vehicles</h2>
+            <div className="flex items-center gap-4 mb-7">
+              <div>
+                <div className="section-label text-xs">You May Also Like</div>
+                <h2 className="text-2xl font-bold text-[#0A1628]">Similar Vehicles</h2>
+              </div>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {related.map((v) => (
                 <VehicleCard key={v.id} vehicle={v} />

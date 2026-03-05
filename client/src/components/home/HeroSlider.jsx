@@ -7,22 +7,22 @@ import { heroSlides } from '../../data/mockData';
 const HeroSlider = () => {
   const [current, setCurrent] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
-  const [progress, setProgress] = useState(0);
   const intervalRef = useRef(null);
   const progressRef = useRef(null);
-  const INTERVAL = 5000;
+  const INTERVAL = 5500;
 
   const resetProgress = useCallback(() => {
-    setProgress(0);
     if (progressRef.current) {
       progressRef.current.style.transition = 'none';
       progressRef.current.style.width = '0%';
-      setTimeout(() => {
-        if (progressRef.current) {
-          progressRef.current.style.transition = `width ${INTERVAL}ms linear`;
-          progressRef.current.style.width = '100%';
-        }
-      }, 20);
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          if (progressRef.current) {
+            progressRef.current.style.transition = `width ${INTERVAL}ms linear`;
+            progressRef.current.style.width = '100%';
+          }
+        });
+      });
     }
   }, []);
 
@@ -47,9 +47,7 @@ const HeroSlider = () => {
       intervalRef.current = setInterval(next, INTERVAL);
     } else {
       clearInterval(intervalRef.current);
-      if (progressRef.current) {
-        progressRef.current.style.transition = 'none';
-      }
+      if (progressRef.current) progressRef.current.style.transition = 'none';
     }
     return () => clearInterval(intervalRef.current);
   }, [isPlaying, next, resetProgress]);
@@ -58,90 +56,94 @@ const HeroSlider = () => {
 
   return (
     <section
-      className="relative w-full h-screen min-h-[760px] overflow-hidden"
+      className="relative w-full h-screen min-h-[700px] overflow-hidden"
       onMouseEnter={() => setIsPlaying(false)}
       onMouseLeave={() => setIsPlaying(true)}
     >
-      {/* Background Images */}
+      {/* Background */}
       <AnimatePresence initial={false}>
         <motion.div
           key={slide.id}
-          initial={{ opacity: 0, scale: 1.08 }}
+          initial={{ opacity: 0, scale: 1.06 }}
           animate={{ opacity: 1, scale: 1.0 }}
-          exit={{ opacity: 0, scale: 0.96 }}
-          transition={{ duration: 1.2, ease: 'easeInOut' }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 1.4, ease: 'easeInOut' }}
           className="absolute inset-0"
         >
-          <img
-            src={slide.image}
-            alt={slide.headline}
-            className="w-full h-full object-cover"
-            loading="eager"
-          />
-          {/* Overlays */}
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0D1B2A]/85 via-[#0D1B2A]/50 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0D1B2A]/60 via-transparent to-transparent" />
+          <img src={slide.image} alt={slide.headline} className="w-full h-full object-cover" loading="eager" />
+          {/* Multi-layer overlay for depth */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0A1628]/92 via-[#0A1628]/55 to-[#0A1628]/10" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0A1628]/75 via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#0A1628]/20 via-transparent to-transparent" />
         </motion.div>
       </AnimatePresence>
 
+      {/* Decorative vertical line */}
+      <div className="absolute left-[92%] top-1/4 bottom-1/4 w-px bg-white/10 hidden xl:block" />
+
       {/* Content */}
       <div className="relative z-10 h-full flex items-center">
-        <div className="container-custom w-full pt-20 pb-32">
+        <div className="container-custom w-full pt-24 pb-36">
           <AnimatePresence mode="wait">
             <motion.div
               key={slide.id}
-              className="max-w-xl space-y-8"
+              className="max-w-2xl space-y-7"
             >
+              {/* Label */}
               <motion.div
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.7, delay: 0.1 }}
+                exit={{ opacity: 0, y: -12 }}
+                transition={{ duration: 0.65, delay: 0.05 }}
               >
-                <span className="inline-block px-4 py-1.5 rounded-full text-xs font-semibold tracking-widest uppercase text-[#C9A84C] border border-[#C9A84C]/40 bg-[#C9A84C]/10">
-                  Premium Car Rental · Bahrain
-                </span>
+                <span className="section-label">Premium Car Rental · Bahrain</span>
               </motion.div>
 
+              {/* Headline */}
               <motion.h1
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 32 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.7, delay: 0.25 }}
-                className="text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-tight"
-                style={{ fontFamily: 'Playfair Display, serif' }}
+                exit={{ opacity: 0, y: -16 }}
+                transition={{ duration: 0.75, delay: 0.18 }}
+                className="text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-[1.08] tracking-tight"
               >
                 {slide.headline}
               </motion.h1>
 
+              {/* Divider */}
+              <motion.div
+                initial={{ opacity: 0, scaleX: 0 }}
+                animate={{ opacity: 1, scaleX: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+                className="divider-gold"
+                style={{ transformOrigin: 'left' }}
+              />
+
+              {/* Subtext */}
               <motion.p
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.7, delay: 0.4 }}
-                className="text-xl text-white/80 leading-relaxed max-w-lg"
+                exit={{ opacity: 0, y: -12 }}
+                transition={{ duration: 0.7, delay: 0.38 }}
+                className="text-lg md:text-xl text-white/75 leading-relaxed max-w-lg font-light"
               >
                 {slide.subtext}
               </motion.p>
 
+              {/* CTAs */}
               <motion.div
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.7, delay: 0.55 }}
-                className="flex flex-wrap gap-4"
+                exit={{ opacity: 0, y: -12 }}
+                transition={{ duration: 0.7, delay: 0.52 }}
+                className="flex flex-wrap gap-4 pt-2"
               >
-                <Link
-                  to={slide.ctaLink}
-                  className="btn-sweep inline-flex items-center gap-2 px-8 py-4 bg-[#C9A84C] text-[#0D1B2A] font-bold rounded-xl hover:bg-[#E8C97A] transition-all duration-300 hover:scale-105 hover:shadow-xl text-base"
-                >
+                <Link to={slide.ctaLink} className="btn-primary text-base px-8 py-4">
                   {slide.ctaText}
                   <ChevronRight size={18} />
                 </Link>
-                <Link
-                  to="/contact"
-                  className="inline-flex items-center gap-2 px-8 py-4 border-2 border-white/30 text-white font-semibold rounded-xl hover:border-white hover:bg-white/10 transition-all duration-300 text-base"
-                >
+                <Link to="/contact" className="btn-outline text-base px-8 py-4">
                   Contact Us
                 </Link>
               </motion.div>
@@ -150,59 +152,59 @@ const HeroSlider = () => {
         </div>
       </div>
 
-      {/* Dot Indicators + Controls */}
+      {/* Slide Counter — right side */}
+      <div className="absolute top-1/2 right-8 -translate-y-1/2 z-20 hidden lg:flex flex-col items-center gap-3">
+        <span className="text-white font-bold text-2xl tracking-wide">{String(current + 1).padStart(2, '0')}</span>
+        <div className="w-px h-14 bg-gradient-to-b from-white/40 to-transparent" />
+        <span className="text-white/35 text-sm">{String(heroSlides.length).padStart(2, '0')}</span>
+      </div>
+
+      {/* Bottom Controls */}
       <div className="absolute bottom-10 left-0 right-0 z-20">
         <div className="container-custom flex items-center justify-between">
-          <div className="flex items-center gap-3">
+          {/* Dot indicators */}
+          <div className="flex items-center gap-2.5">
             {heroSlides.map((_, idx) => (
               <button
                 key={idx}
                 onClick={() => goTo(idx)}
-                className={`transition-all duration-300 rounded-full ${idx === current
-                  ? 'w-8 h-3 bg-[#C9A84C]'
-                  : 'w-3 h-3 bg-white/40 hover:bg-white/60'
+                className={`transition-all duration-400 rounded-full ${idx === current
+                    ? 'w-10 h-2.5 bg-[#C9A84C] shadow-[0_0_12px_rgba(201,168,76,0.6)]'
+                    : 'w-2.5 h-2.5 bg-white/30 hover:bg-white/55'
                   }`}
               />
             ))}
           </div>
 
-          <div className="flex items-center gap-3">
-            <button
-              onClick={prev}
-              className="w-10 h-10 rounded-full border border-white/20 text-white hover:border-[#C9A84C] hover:text-[#C9A84C] transition-all duration-300 flex items-center justify-center bg-black/20"
-            >
-              <ChevronLeft size={18} />
-            </button>
-            <button
-              onClick={() => setIsPlaying(!isPlaying)}
-              className="w-10 h-10 rounded-full border border-white/20 text-white hover:border-[#C9A84C] hover:text-[#C9A84C] transition-all duration-300 flex items-center justify-center bg-black/20"
-            >
-              {isPlaying ? <Pause size={16} /> : <Play size={16} />}
-            </button>
-            <button
-              onClick={next}
-              className="w-10 h-10 rounded-full border border-white/20 text-white hover:border-[#C9A84C] hover:text-[#C9A84C] transition-all duration-300 flex items-center justify-center bg-black/20"
-            >
-              <ChevronRight size={18} />
-            </button>
+          {/* Play/Prev/Next */}
+          <div className="flex items-center gap-2">
+            {[prev, () => setIsPlaying(!isPlaying), next].map((fn, i) => {
+              const icons = [
+                <ChevronLeft size={16} />,
+                isPlaying ? <Pause size={14} /> : <Play size={14} />,
+                <ChevronRight size={16} />
+              ];
+              return (
+                <button
+                  key={i}
+                  onClick={fn}
+                  className="w-9 h-9 rounded-full glass flex items-center justify-center text-white hover:border-[#C9A84C]/60 hover:text-[#C9A84C] transition-all duration-300"
+                >
+                  {icons[i]}
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>
 
-      {/* Progress Bar */}
-      <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/10 z-20">
+      {/* Progress bar */}
+      <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-white/8 z-20">
         <div
           ref={progressRef}
-          className="h-full bg-[#C9A84C]"
-          style={{ width: '0%', transition: `width ${INTERVAL}ms linear` }}
+          className="h-full bg-gradient-to-r from-[#C9A84C] to-[#E8C97A]"
+          style={{ width: '0%' }}
         />
-      </div>
-
-      {/* Slide Counter */}
-      <div className="absolute top-1/2 right-8 -translate-y-1/2 z-20 hidden lg:flex flex-col items-center gap-2">
-        <span className="text-white font-bold text-2xl">{String(current + 1).padStart(2, '0')}</span>
-        <div className="w-px h-12 bg-white/30" />
-        <span className="text-white/50 text-sm">{String(heroSlides.length).padStart(2, '0')}</span>
       </div>
     </section>
   );

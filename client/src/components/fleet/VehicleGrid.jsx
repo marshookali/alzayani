@@ -39,17 +39,17 @@ const VehicleGrid = ({ searchQuery }) => {
     <div className="flex-1 min-w-0">
       {/* Search Bar */}
       <div className="relative mb-6">
-        <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+        <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
         <input
           type="text"
           value={localSearch}
           onChange={(e) => { setLocalSearch(e.target.value); setVisibleCount(ITEMS_PER_PAGE); }}
-          placeholder="Search vehicles..."
-          className="w-full pl-11 pr-10 py-3 border border-gray-300 rounded-xl text-sm focus:outline-none focus:border-[#0D1B2A] focus:ring-2 focus:ring-[#0D1B2A]/10 transition-all"
+          placeholder="Search vehicles by name or type…"
+          className="w-full pl-11 pr-10 py-3.5 border border-gray-200 rounded-2xl text-sm text-gray-900 focus:outline-none focus:border-[#0A1628] focus:ring-2 focus:ring-[#0A1628]/8 transition-all bg-white shadow-sm"
         />
         {localSearch && (
-          <button onClick={() => setLocalSearch('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700">
-            <X size={16} />
+          <button onClick={() => setLocalSearch('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700 transition-colors">
+            <X size={15} />
           </button>
         )}
       </div>
@@ -99,12 +99,12 @@ const VehicleGrid = ({ searchQuery }) => {
 
               {/* Load More */}
               {hasMore && (
-                <div className="text-center mt-10">
+                <div className="text-center mt-12">
                   <motion.button
-                    whileHover={{ scale: 1.03 }}
-                    whileTap={{ scale: 0.97 }}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                     onClick={() => setVisibleCount((c) => c + ITEMS_PER_PAGE)}
-                    className="px-8 py-3 border-2 border-[#0D1B2A] text-[#0D1B2A] font-semibold rounded-xl hover:bg-[#0D1B2A] hover:text-white transition-all duration-300"
+                    className="px-8 py-3.5 bg-gradient-to-r from-[#0A1628] to-[#112240] text-white font-semibold rounded-2xl hover:shadow-lg transition-all duration-300 text-sm"
                   >
                     Load More Vehicles ({filtered.length - visibleCount} remaining)
                   </motion.button>
